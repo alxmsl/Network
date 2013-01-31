@@ -65,17 +65,17 @@ final class CurlTransport implements TransportInterface {
 
         $httpCode = curl_getinfo($Resource, CURLINFO_HTTP_CODE);
         curl_close($Resource);
-        switch (1) {
-            case (int) floor($httpCode / 100):
+        switch (ceil($httpCode - 100) / 100) {
+            case 1:
                 throw new HttpInformationalCodeException($result, $httpCode);
-            case (int) floor($httpCode / 300):
+            case 3:
                 throw new HttpRedirectionCodeException($result, $httpCode);
-            case (int) floor($httpCode / 400):
+            case 4:
                 throw new HttpClientErrorCodeException($result, $httpCode);
-            case (int) floor($httpCode / 500):
+            case 5:
                 throw new HttpServerErrorCodeException($result, $httpCode);
             default:
-            case (int) floor($httpCode / 200):
+            case 2:
                 return $result;
         }
     }
@@ -117,7 +117,7 @@ final class CurlTransport implements TransportInterface {
         if (!empty($data)) {
             switch ($this->Request->getContentTypeCode()) {
                 case Request::CONTENT_TYPE_UNDEFINED:
-                    $string = $data;
+                    $string = http_build_query($data);
                     break;
                 default:
                     throw new HttpContentTypeException();
