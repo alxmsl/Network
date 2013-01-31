@@ -65,7 +65,7 @@ final class CurlTransport implements TransportInterface {
 
         $httpCode = curl_getinfo($Resource, CURLINFO_HTTP_CODE);
         curl_close($Resource);
-        switch (ceil($httpCode - 100) / 100) {
+        switch (floor($httpCode / 100)) {
             case 1:
                 throw new HttpInformationalCodeException($result, $httpCode);
             case 3:
