@@ -43,7 +43,8 @@ final class CurlTransport implements TransportInterface {
      * @throws CurlErrorException if libcurl error generated
      */
     public function makeHttpRequest() {
-        $url = $this->addGetData($this->Request->getUrl(), $this->Request->getGetData());
+        $url = $this->addUrlData($this->Request->getUrl(), $this->Request->getUrlData());
+        $url = $this->addGetData($url, $this->Request->getGetData());
         $Resource = curl_init($url);
 
         curl_setopt_array($Resource, array(
@@ -127,6 +128,25 @@ final class CurlTransport implements TransportInterface {
                 CURLOPT_POSTFIELDS => $string,
             ));
         }
+    }
+
+    /**
+     * Add url parameters for url
+     * @param string $url base url
+     * @param array $data url parameters key-value data
+     * @throws \InvalidArgumentException when url already contains GET data
+     * @return string query string
+     */
+    private function addUrlData($url, $data) {
+        if (strpos($url, '?') !== false) {
+            throw new \InvalidArgumentException();
+        }
+
+        $parts[] = trim($url, '/');
+        foreach ($data as $key => $value) {
+            $parts[] = urlencode($key .'/' . $value);
+        }
+        return implode('/', $parts);
     }
 }
 

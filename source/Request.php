@@ -62,6 +62,11 @@ final class Request implements RequestInterface {
     private $postData = array();
 
     /**
+     * @var array url parameters
+     */
+    private $urlData = array();
+
+    /**
      * Send request data method
      * @return string request execution result
      */
@@ -113,7 +118,7 @@ final class Request implements RequestInterface {
      * @return Request self
      */
     public function addGetField($field, $value) {
-        $this->getData[$field] = $value;
+        $this->getData[$field] = (string) $value;
         return $this;
     }
 
@@ -132,7 +137,7 @@ final class Request implements RequestInterface {
      * @return Request self
      */
     public function addPostField($field, $value) {
-        $this->postData[$field] = $value;
+        $this->postData[$field] = (string) $value;
         return $this;
     }
 
@@ -142,6 +147,25 @@ final class Request implements RequestInterface {
      */
     public function getPostData() {
         return $this->postData;
+    }
+
+    /**
+     * Add url parameter
+     * @param string $field parameter name
+     * @param string $value parameter value
+     * @return Request self
+     */
+    public function addUrlField($field, $value) {
+        $this->urlData[$field] = (string) $value;
+        return $this;
+    }
+
+    /**
+     * Getter for url parameters
+     * @return array url parameters
+     */
+    public function getUrlData() {
+        return $this->urlData;
     }
 
     /**
