@@ -12,9 +12,16 @@ use Network\RequestInterface,
  */ 
 final class Request implements RequestInterface {
     /**
+     * Http request methods
+     */
+    const   METHOD_AUTO = 0,    // Setup POST, if POST data was present
+            METHOD_GET  = 1,    // Strictly GET request
+            METHOD_POST = 2;    // Strictly POST request
+
+    /**
      * Content type constants
      */
-    const   CONTENT_TYPE_UNDEFINED = 0;
+    const CONTENT_TYPE_UNDEFINED = 0;
 
     /**
      * Transport library constants
@@ -50,6 +57,11 @@ final class Request implements RequestInterface {
      * @var int content type for the request
      */
     private $contentTypeCode = self::CONTENT_TYPE_UNDEFINED;
+
+    /**
+     * @var int HTTP method type
+     */
+    private $method = self::METHOD_AUTO;
 
     /**
      * @var array GET parameters
@@ -94,6 +106,32 @@ final class Request implements RequestInterface {
      */
     public function getContentTypeCode() {
         return $this->contentTypeCode;
+    }
+
+    /**
+     * Setter for request method
+     * @param int $method method type code
+     * @throws \InvalidArgumentException
+     */
+    public function setMethod($method) {
+        $method = (int) $method;
+        switch ($this->method) {
+            case self::METHOD_AUTO:
+            case self::METHOD_GET:
+            case self::METHOD_POST:
+                $this->method = $method;
+                break;
+            default:
+                throw new \InvalidArgumentException();
+        }
+    }
+
+    /**
+     * Getter for request method
+     * @return int method type code
+     */
+    public function getMethod() {
+        return $this->method;
     }
 
     /**

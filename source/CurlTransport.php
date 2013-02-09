@@ -55,6 +55,7 @@ final class CurlTransport implements TransportInterface {
 
         $this->addHeaders($Resource, $this->Request->getHeaders());
         $this->addPostData($Resource, $this->Request->getPostData());
+        $this->setMethod($Resource, $this->Request->getMethod());
 
         $result = curl_exec($Resource);
         if ($result === false) {
@@ -151,6 +152,17 @@ final class CurlTransport implements TransportInterface {
             }
         }
         return implode('/', $parts);
+    }
+
+    private function setMethod($Resource, $method) {
+        switch ($method) {
+            case Request::METHOD_GET:
+                curl_setopt($Resource, CURLOPT_HTTPGET, true);
+                break;
+            case Request::METHOD_POST:
+                curl_setopt($Resource, CURLOPT_POST, true);
+                break;
+        }
     }
 }
 
