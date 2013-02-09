@@ -146,7 +146,7 @@ final class CurlTransport implements TransportInterface {
         $parts[] = trim($url, '/');
         foreach ($data as $key => $value) {
             if ($value) {
-                $parts[] = urlencode($key .'/' . $value);
+                $parts[] = urlencode($key) .'/' . urlencode($value);
             } else {
                 $parts[] = urlencode($key);
             }
