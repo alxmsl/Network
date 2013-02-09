@@ -152,10 +152,10 @@ final class Request implements RequestInterface {
     /**
      * Add url parameter
      * @param string $field parameter name
-     * @param string $value parameter value
+     * @param string $value parameter value. Default empty
      * @return Request self
      */
-    public function addUrlField($field, $value) {
+    public function addUrlField($field, $value = '') {
         $this->urlData[$field] = (string) $value;
         return $this;
     }
