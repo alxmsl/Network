@@ -121,6 +121,9 @@ final class CurlTransport implements TransportInterface {
                 case Request::CONTENT_TYPE_UNDEFINED:
                     $string = http_build_query($data);
                     break;
+                case Request::CONTENT_TYPE_JSON:
+                    $string = json_encode($data);
+                    break;
                 default:
                     throw new HttpContentTypeException();
             }
