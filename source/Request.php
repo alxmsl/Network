@@ -92,6 +92,15 @@ final class Request implements RequestInterface {
     }
 
     /**
+     * Signature getter
+     * @param callable $Signification signification callback function
+     * @return string signature value
+     */
+    public function getSignature(\Closure $Signification) {
+        return (string) $Signification($this);
+    }
+
+    /**
      * Content type setter
      * @param int $contentTypeCode content type code
      * @return Request self
