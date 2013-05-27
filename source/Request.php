@@ -190,6 +190,16 @@ final class Request implements RequestInterface {
     }
 
     /**
+     * Setter for POST parameters
+     * @param array $data parameters
+     * @return Request self
+     */
+    public function setPostData(array $data) {
+        $this->postData = $data;
+        return $this;
+    }
+
+    /**
      * Getter for POST parameters
      * @return array POST parameters
      */
@@ -232,6 +242,17 @@ final class Request implements RequestInterface {
      */
     public function getUrl() {
         return $this->url;
+    }
+
+    /**
+     * Add header
+     * @param string $name header name
+     * @param string $value header value
+     * @return Request self
+     */
+    public function addHeader($name, $value) {
+        $this->headers[$name] = (string) $value;
+        return $this;
     }
 
     /**
