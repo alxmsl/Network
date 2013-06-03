@@ -92,6 +92,14 @@ final class Request implements RequestInterface {
     }
 
     /**
+     * Getter for response headers data
+     * @return array response headers data
+     */
+    public function getResponseHeaders() {
+        return $this->Transport->getResponseHeaders();
+    }
+
+    /**
      * Signature getter
      * @param callable $Signification signification callback function
      * @return string signature value

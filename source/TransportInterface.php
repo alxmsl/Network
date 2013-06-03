@@ -22,6 +22,12 @@ interface TransportInterface {
     public function getRequest();
 
     /**
+     * Getter for response headers data
+     * @return array response headers data
+     */
+    public function getResponseHeaders();
+
+    /**
      * Transportation implementation method
      * @return string request execution result
      */
