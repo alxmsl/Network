@@ -16,6 +16,11 @@ final class CurlTransport implements TransportInterface {
     private $Request = null;
 
     /**
+     * @var array response headers data
+     */
+    private $responseHeaders = array();
+
+    /**
      * Setter for request object
      * @param Request $Request request object
      * @return CurlTransport self
@@ -31,6 +36,14 @@ final class CurlTransport implements TransportInterface {
      */
     public function getRequest() {
         return $this->Request;
+    }
+
+    /**
+     * Getter for response headers data
+     * @return array response headers data
+     */
+    public function getResponseHeaders() {
+        return $this->responseHeaders;
     }
 
     /**
@@ -51,6 +64,7 @@ final class CurlTransport implements TransportInterface {
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_CONNECTTIMEOUT  => $this->Request->getConnectTimeout(),
             CURLOPT_TIMEOUT         => $this->Request->getTimeout(),
+            CURLOPT_HEADER          => true,
         ));
 
         $this->addHeaders($Resource, $this->Request->getHeaders());
@@ -65,20 +79,39 @@ final class CurlTransport implements TransportInterface {
             throw new CurlErrorException($errorMessage, $errorCode);
         }
 
+        $headerSize = curl_getinfo($Resource, CURLINFO_HEADER_SIZE);
+        $headers = substr($result, 0, $headerSize);
+        $this->parseResponseHeaders($headers);
+
+        $body = substr($result, $headerSize);
         $httpCode = curl_getinfo($Resource, CURLINFO_HTTP_CODE);
         curl_close($Resource);
         switch (floor($httpCode / 100)) {
             case 1:
-                throw new HttpInformationalCodeException($result, $httpCode);
+                throw new HttpInformationalCodeException($body, $httpCode);
             case 3:
-                throw new HttpRedirectionCodeException($result, $httpCode);
+                throw new HttpRedirectionCodeException($body, $httpCode);
             case 4:
-                throw new HttpClientErrorCodeException($result, $httpCode);
+                throw new HttpClientErrorCodeException($body, $httpCode);
             case 5:
-                throw new HttpServerErrorCodeException($result, $httpCode);
+                throw new HttpServerErrorCodeException($body, $httpCode);
             default:
             case 2:
-                return $result;
+                return $body;
+        }
+    }
+
+    /**
+     * Parsing response block for headers
+     * @param string $string response block
+     */
+    private function parseResponseHeaders($string) {
+        $parts = explode("\n", $string);
+        foreach ($parts as $part) {
+            if (strpos($part, ':') !== false) {
+                list($name, $value) = explode(':', $part);
+                $this->responseHeaders[trim($name)] = trim($value);
+            }
         }
     }
 
