@@ -190,6 +190,11 @@ final class CurlTransport implements TransportInterface {
         return implode('/', $parts);
     }
 
+    /**
+     * Set request HTTP method
+     * @param resource $Resource libcurl handler
+     * @param int $method HTTP method identifier
+     */
     private function setMethod($Resource, $method) {
         switch ($method) {
             case Request::METHOD_GET:
