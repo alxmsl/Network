@@ -2,8 +2,9 @@
 
 namespace Network\Http;
 
-use Network\RequestInterface,
-    Network\TransportInterface;
+use Network\RequestInterface;
+use Network\TransportInterface;
+use LogicException;
 
 /**
  * Class for Http request
@@ -22,7 +23,8 @@ final class Request implements RequestInterface {
      * Content type constants
      */
     const   CONTENT_TYPE_UNDEFINED = 0,
-            CONTENT_TYPE_JSON = 1;
+            CONTENT_TYPE_JSON = 1,
+            CONTENT_TYPE_TEXT = 2;
 
     /**
      * Transport library constants
@@ -70,9 +72,9 @@ final class Request implements RequestInterface {
     private $getData = array();
 
     /**
-     * @var array POST parameters
+     * @var array|null POST parameters
      */
-    private $postData = array();
+    private $postData = null;
 
     /**
      * @var array url parameters
@@ -190,26 +192,35 @@ final class Request implements RequestInterface {
      * Add POST parameter
      * @param string $field parameter name
      * @param string $value parameter value
+     * @throw LogicException if post data is not array
      * @return Request self
      */
     public function addPostField($field, $value) {
-        $this->postData[$field] = (string) $value;
-        return $this;
+        if (is_null($this->postData)) {
+            $this->postData = array();
+        }
+
+        if (is_array($this->postData)) {
+            $this->postData[$field] = (string) $value;
+            return $this;
+        } else {
+            throw new LogicException('cannot set field for non array');
+        }
     }
 
     /**
      * Setter for POST parameters
-     * @param array $data parameters
+     * @param mixed $data parameters
      * @return Request self
      */
-    public function setPostData(array $data) {
+    public function setPostData($data) {
         $this->postData = $data;
         return $this;
     }
 
     /**
      * Getter for POST parameters
-     * @return array POST parameters
+     * @return mixed POST parameters
      */
     public function getPostData() {
         return $this->postData;

@@ -145,7 +145,7 @@ final class CurlTransport implements TransportInterface {
     /**
      * Add POST data for request
      * @param resource $Resource libcurl handler
-     * @param array $data POST parameters
+     * @param mixed $data POST parameters
      * @throws HttpContentTypeException when use unsupported type of content
      */
     private function addPostData($Resource, $data) {
@@ -156,6 +156,9 @@ final class CurlTransport implements TransportInterface {
                     break;
                 case Request::CONTENT_TYPE_JSON:
                     $string = json_encode($data);
+                    break;
+                case Request::CONTENT_TYPE_TEXT:
+                    $string = (string) $data;
                     break;
                 default:
                     throw new HttpContentTypeException();
