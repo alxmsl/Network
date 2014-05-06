@@ -23,8 +23,9 @@ final class Request implements RequestInterface {
      * Content type constants
      */
     const   CONTENT_TYPE_UNDEFINED = 0,
-            CONTENT_TYPE_JSON = 1,
-            CONTENT_TYPE_TEXT = 2;
+            CONTENT_TYPE_JSON      = 1,
+            CONTENT_TYPE_TEXT      = 2,
+            CONTENT_TYPE_XML       = 3;
 
     /**
      * Transport library constants

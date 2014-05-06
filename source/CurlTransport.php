@@ -3,6 +3,7 @@
 namespace Network\Http;
 
 use Network\TransportInterface;
+use DOMDocument;
 
 /**
  * Class for support transport via libcurl
@@ -159,6 +160,13 @@ final class CurlTransport implements TransportInterface {
                     break;
                 case Request::CONTENT_TYPE_TEXT:
                     $string = (string) $data;
+                    break;
+                case Request::CONTENT_TYPE_XML:
+                    if ($data instanceof DOMDocument) {
+                        $string = $data->saveXML();
+                    } else {
+                        $string = (string) $data;
+                    }
                     break;
                 default:
                     throw new HttpContentTypeException();
