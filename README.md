@@ -3,6 +3,15 @@ Network
 
 Native network requests driver for PHP
 
+Installation
+-------
+
+Require packet in a composer.json
+
+    "alxmsl/network": ">=1.0.0"
+
+Run Composer: `php composer.phar install`
+
 Usage example
 -------
 
