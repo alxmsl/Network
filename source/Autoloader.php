@@ -23,10 +23,11 @@ final class Autoloader {
      */
     private static $classes = array(
         'alxmsl\\Network\\Autoloader'          => 'Autoloader.php',
-        'alxmsl\\Network\\Http\\Request'       => 'Request.php',
         'alxmsl\\Network\\RequestInterface'    => 'RequestInterface.php',
-        'alxmsl\\Network\\Http\\CurlTransport' => 'CurlTransport.php',
         'alxmsl\\Network\\TransportInterface'  => 'TransportInterface.php',
+
+        'alxmsl\\Network\\Http\\Request'       => 'Http/Request.php',
+        'alxmsl\\Network\\Http\\CurlTransport' => 'Http/CurlTransport.php',
     );
 
     /**
