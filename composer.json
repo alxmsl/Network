@@ -1,7 +1,7 @@
 {
     "name": "alxmsl/network",
     "description": "Simple library for network HTTP requests",
-    "keywords": ["curl", "http"],
+    "keywords": ["curl", "http", "api"],
     "license": "WTFPL",
     "authors": [
         {
