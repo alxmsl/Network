@@ -1,0 +1,19 @@
+{
+    "name": "alxmsl/network",
+    "description": "Simple library for network HTTP requests",
+    "keywords": ["curl", "http"],
+    "license": "WTFPL",
+    "authors": [
+        {
+            "name": "alxmsl",
+            "email": "alexey.y.maslov@gmail.com"
+        }
+    ],
+    "support": {
+        "email": "alexey.y.maslov@gmail.com",
+        "issues": "https://github.com/alxmsl/Network/issues"
+    },
+    "autoload": {
+        "psr-4": {"alxmsl\\Network\\": "source/"}
+    }
+}

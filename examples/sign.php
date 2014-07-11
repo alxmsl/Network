@@ -1,5 +1,11 @@
 <?php
 /**
+ * This program is free software. It comes without any warranty, to
+ * the extent permitted by applicable law. You can redistribute it
+ * and/or modify it under the terms of the Do What The Fuck You Want
+ * To Public License, Version 2, as published by Sam Hocevar. See
+ * http://www.wtfpl.net/ for more details.
+ * 
  * Request signification example
  * @author alxmsl
  * @date 3/30/13
@@ -8,7 +14,7 @@
 // Firstly include base class
 include('../source/Autoloader.php');
 
-use Network\Http\Request;
+use alxmsl\Network\Http\Request;
 
 // Create request object
 $Request = new Request();
@@ -25,7 +31,7 @@ $Request->addPostField('c', 'value_c');
 $Request->addPostField('d', 'value_d');
 
 // Create custom request data signature
-$sign = $Request->getSignature(function (\Network\Http\Request $Request) {
+$sign = $Request->getSignature(function (Request $Request) {
     $sign = '';
     $get = $Request->getGetData();
     if (!empty($get)) {
