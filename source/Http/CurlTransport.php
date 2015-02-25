@@ -8,6 +8,12 @@
  */
 
 namespace alxmsl\Network\Http;
+use alxmsl\Network\Exception\CurlErrorException;
+use alxmsl\Network\Exception\HttpClientErrorCodeException;
+use alxmsl\Network\Exception\HttpContentTypeException;
+use alxmsl\Network\Exception\HttpInformationalCodeException;
+use alxmsl\Network\Exception\HttpRedirectionCodeException;
+use alxmsl\Network\Exception\HttpServerErrorCodeException;
 use alxmsl\Network\TransportInterface;
 use DOMDocument;
 
@@ -67,12 +73,16 @@ final class CurlTransport implements TransportInterface {
         $url = $this->addGetData($url, $this->Request->getGetData());
         $Resource = curl_init($url);
 
-        curl_setopt_array($Resource, array(
+        $options = [
             CURLOPT_RETURNTRANSFER  => true,
             CURLOPT_CONNECTTIMEOUT  => $this->Request->getConnectTimeout(),
             CURLOPT_TIMEOUT         => $this->Request->getTimeout(),
             CURLOPT_HEADER          => true,
-        ));
+        ];
+        if (!$this->Request->isDefaultSslVersion()) {
+            $options[CURLOPT_SSLVERSION] = $this->Request->getSslVersion();
+        }
+        curl_setopt_array($Resource, $options);
 
         $this->addHeaders($Resource, $this->Request->getHeaders());
         $this->addPostData($Resource, $this->Request->getPostData());
@@ -223,8 +233,3 @@ final class CurlTransport implements TransportInterface {
         }
     }
 }
-
-/**
- * libcurl error exception
- */
-final class CurlErrorException extends TransportException {}

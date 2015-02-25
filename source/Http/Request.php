@@ -8,8 +8,11 @@
  */
 
 namespace alxmsl\Network\Http;
+use alxmsl\Network\Exception\TransportException;
 use alxmsl\Network\RequestInterface;
 use alxmsl\Network\TransportInterface;
+use Closure;
+use InvalidArgumentException;
 use LogicException;
 
 /**
@@ -21,22 +24,22 @@ final class Request implements RequestInterface {
     /**
      * Http request methods
      */
-    const   METHOD_AUTO = 0,    // Setup POST, if POST data was present
-            METHOD_GET  = 1,    // Strictly GET request
-            METHOD_POST = 2;    // Strictly POST request
+    const METHOD_AUTO = 0, // Setup POST, if POST data was present
+          METHOD_GET  = 1, // Strictly GET request
+          METHOD_POST = 2; // Strictly POST request
 
     /**
      * Content type constants
      */
-    const   CONTENT_TYPE_UNDEFINED = 0,
-            CONTENT_TYPE_JSON      = 1,
-            CONTENT_TYPE_TEXT      = 2,
-            CONTENT_TYPE_XML       = 3;
+    const CONTENT_TYPE_UNDEFINED = 0,
+          CONTENT_TYPE_JSON      = 1,
+          CONTENT_TYPE_TEXT      = 2,
+          CONTENT_TYPE_XML       = 3;
 
     /**
      * Transport library constants
      */
-    const TRANSPORT_CURL    = 0;
+    const TRANSPORT_CURL = 0;
 
     /**
      * @var TransportInterface transport implementation object
@@ -51,7 +54,7 @@ final class Request implements RequestInterface {
     /**
      * @var array request headers
      */
-    private $headers = array();
+    private $headers = [];
 
     /**
      * @var int connect timeout for the request, seconds
@@ -76,7 +79,7 @@ final class Request implements RequestInterface {
     /**
      * @var array GET parameters
      */
-    private $getData = array();
+    private $getData = [];
 
     /**
      * @var array|null POST parameters
@@ -86,7 +89,12 @@ final class Request implements RequestInterface {
     /**
      * @var array url parameters
      */
-    private $urlData = array();
+    private $urlData = [];
+
+    /**
+     * @var int SSL version code for request
+     */
+    private $sslVersion = 0;
 
     /**
      * Send request data method
@@ -113,7 +121,7 @@ final class Request implements RequestInterface {
      * @param callable $Signification signification callback function
      * @return string signature value
      */
-    public function getSignature(\Closure $Signification) {
+    public function getSignature(Closure $Signification) {
         return (string) $Signification($this);
     }
 
@@ -138,7 +146,7 @@ final class Request implements RequestInterface {
     /**
      * Setter for request method
      * @param int $method method type code
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function setMethod($method) {
         $method = (int) $method;
@@ -149,7 +157,7 @@ final class Request implements RequestInterface {
                 $this->method = $method;
                 break;
             default:
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException();
         }
     }
 
@@ -163,8 +171,8 @@ final class Request implements RequestInterface {
 
     /**
      * Transport object setter
-     * @param int $transportCode transport implemetation code
-     * @throws \InvalidArgumentException when was set incorrect transport code
+     * @param int $transportCode transport implementation code
+     * @throws InvalidArgumentException when was set incorrect transport code
      */
     public function setTransport($transportCode) {
         switch ($transportCode) {
@@ -172,7 +180,7 @@ final class Request implements RequestInterface {
                 $this->Transport = new CurlTransport();
                 break;
             default:
-                throw new \InvalidArgumentException();
+                throw new InvalidArgumentException();
         }
     }
 
@@ -302,12 +310,12 @@ final class Request implements RequestInterface {
     /**
      * Setter for connect timeout
      * @param int $connectTimeout connect timeout value, seconds
-     * @throws \InvalidArgumentException for negative connect timeout
+     * @throws InvalidArgumentException for negative connect timeout
      * @return Request self
      */
     public function setConnectTimeout($connectTimeout) {
         if ($connectTimeout < 0) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
         $this->connectTimeout = (int) $connectTimeout;
         return $this;
@@ -324,12 +332,12 @@ final class Request implements RequestInterface {
     /**
      * Setter for request timeout
      * @param int $timeout request timeout, seconds
-     * @throws \InvalidArgumentException for negative request timeout
+     * @throws InvalidArgumentException for negative request timeout
      * @return Request self
      */
     public function setTimeout($timeout) {
         if ($timeout < 0) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
         $this->timeout = $timeout;
         return $this;
@@ -342,44 +350,27 @@ final class Request implements RequestInterface {
     public function getTimeout() {
         return $this->timeout;
     }
+
+    /**
+     * @return int SSL version code
+     */
+    public function getSslVersion() {
+        return $this->sslVersion;
+    }
+
+    /**
+     * @param int $version SSL version code
+     * @return $this self instance
+     */
+    public function setSslVersion($version) {
+        $this->sslVersion = (int) $version;
+        return $this;
+    }
+
+    /**
+     * @return bool is request SSL version must be default or not
+     */
+    public function isDefaultSslVersion() {
+        return $this->getSslVersion() === 0;
+    }
 }
-
-/**
- * Base http request exception
- */
-class HttpException extends \Exception {}
-
-/**
- * Base exception for not success http codes
- */
-class HttpCodeException extends HttpException {}
-
-/**
- * Exception for http 1xx informational codes
- */
-final class HttpInformationalCodeException extends HttpCodeException {}
-
-/**
- * Exception for http 3xx redirection codes
- */
-final class HttpRedirectionCodeException extends HttpCodeException {}
-
-/**
- * Exception for http 4xx client errors codes
- */
-final class HttpClientErrorCodeException extends HttpCodeException {}
-
-/**
- * Exception for http 5xx server error codes
- */
-final class HttpServerErrorCodeException extends HttpCodeException {}
-
-/**
- * Exception for illegal request content types
- */
-final class HttpContentTypeException extends HttpException {}
-
-/**
- * Base class for transportation errors
- */
-class TransportException extends \Exception {}

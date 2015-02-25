@@ -28,6 +28,17 @@ final class Autoloader {
 
         'alxmsl\\Network\\Http\\Request'       => 'Http/Request.php',
         'alxmsl\\Network\\Http\\CurlTransport' => 'Http/CurlTransport.php',
+
+        'alxmsl\\Network\\Exception\\HttpException'                  => 'Exception/HttpException.php',
+        'alxmsl\\Network\\Exception\\HttpClientErrorCodeException'   => 'Exception/HttpClientErrorCodeException.php',
+        'alxmsl\\Network\\Exception\\HttpCodeException'              => 'Exception/HttpCodeException.php',
+        'alxmsl\\Network\\Exception\\HttpContentTypeException'       => 'Exception/HttpContentTypeException.php',
+        'alxmsl\\Network\\Exception\\HttpInformationalCodeException' => 'Exception/HttpInformationalCodeException.php',
+        'alxmsl\\Network\\Exception\\HttpRedirectionCodeException'   => 'Exception/HttpRedirectionCodeException.php',
+        'alxmsl\\Network\\Exception\\HttpServerErrorCodeException'   => 'Exception/HttpServerErrorCodeException.php',
+
+        'alxmsl\\Network\\Exception\\TransportException' => 'Exception/TransportException.php',
+        'alxmsl\\Network\\Exception\\CurlErrorException' => 'Exception/CurlErrorException.php',
     );
 
     /**
