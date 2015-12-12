@@ -31,6 +31,10 @@ Today it supports only curl transport type, but if future will other types. For 
 
     $Request->setTransport(Request::TRANSPORT_CURL);
 
+Using curl transport, you can add any additional [curl options](http://php.net/manual/en/function.curl-setopt.php)
+
+    $Request->getTransport()->setOption(CURLOPT_FOLLOWLOCATION, true);
+
 You can add url parameters for requests like a http://some.body/param1/value1/param2/value2
 
     $Request->addUrlField('param1', 'value1')
