@@ -34,6 +34,11 @@ final class CurlTransport implements TransportInterface {
     private $responseHeaders = array();
 
     /**
+     * @var array additional curl options
+     */
+    private $options = array();
+
+    /**
      * Setter for request object
      * @param Request $Request request object
      * @return CurlTransport self
@@ -82,7 +87,7 @@ final class CurlTransport implements TransportInterface {
         if (!$this->Request->isDefaultSslVersion()) {
             $options[CURLOPT_SSLVERSION] = $this->Request->getSslVersion();
         }
-        curl_setopt_array($Resource, $options);
+        curl_setopt_array($Resource, $this->getOptions() + $options);
 
         $this->addHeaders($Resource, $this->Request->getHeaders());
         $this->addPostData($Resource, $this->Request->getPostData());
@@ -116,6 +121,23 @@ final class CurlTransport implements TransportInterface {
             case 2:
                 return $body;
         }
+    }
+
+    /**
+     * Get all manually setted curl options
+     * @return array assotiative array of curl options
+     */
+    public function getOptions() {
+        return $this->options;
+    }
+
+    /**
+     * Add curl option
+     * @param int $option one of CURLOPT_* constant
+     * @param mixed $value curl option value
+     */
+    public function setOption($option, $value) {
+        $this->options[$option] = $value;
     }
 
     /**

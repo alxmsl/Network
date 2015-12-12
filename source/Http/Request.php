@@ -99,6 +99,7 @@ final class Request implements RequestInterface {
     /**
      * Send request data method
      * @return string request execution result
+     * @throws TransportException in case of undefined Transport
      */
     public function send() {
         if (is_null($this->Transport)) {
@@ -167,6 +168,13 @@ final class Request implements RequestInterface {
      */
     public function getMethod() {
         return $this->method;
+    }
+
+    /**
+     * @return TransportInterface transport implementation
+     */
+    public function getTransport() {
+        return $this->Transport;
     }
 
     /**
