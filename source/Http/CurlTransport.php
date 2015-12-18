@@ -223,7 +223,12 @@ final class CurlTransport implements TransportInterface {
      * @throws \InvalidArgumentException when url already contains GET data
      * @return string query string
      */
-    private function addUrlData($url, $data) {
+    private function addUrlData($url, array $data) {
+        // Do nothing, if there is no url data
+        if (empty($data)) {
+            return $url;
+        }
+
         if (strpos($url, '?') !== false) {
             throw new \InvalidArgumentException();
         }
